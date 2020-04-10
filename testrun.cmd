@@ -1,0 +1,1 @@
+python -m tex2docx sample/sample.tex t.docx
