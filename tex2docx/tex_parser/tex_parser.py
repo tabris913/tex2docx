@@ -5,6 +5,7 @@ import os
 
 from .const import TRANSMAP
 from .parser import Parser
+from .parser.utils import replace_with_map
 
 
 class TexParser(object):
@@ -24,8 +25,7 @@ class TexParser(object):
     def __parse(self):
         if self.__check_file():
             with open(self.__filename, encoding='utf8') as tex:
-                replaced = functools.reduce(
-                    lambda x, y: x.replace(*y), TRANSMAP.items(), tex.read())
+                replaced = replace_with_map(tex.read(), TRANSMAP)
                 self.__doc.add_text(replaced)
         else:
             raise FileNotFoundError(f'"{self.__filename}" was not found')

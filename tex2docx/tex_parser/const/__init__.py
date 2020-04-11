@@ -1,1 +1,1 @@
-from .transmap import TRANSMAP
+from .transmap import ESCAPE, TRANSMAP

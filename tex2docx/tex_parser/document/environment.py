@@ -29,7 +29,12 @@ class Environment(object):
         return re.sub('\n{2,}', '\n\n', self.__body_without_comment)
 
     def replace_body(self, old: str, new: str):
-        self.__body = re.sub(old, new, self.__body)
+        try:
+            self.__body = re.sub(old, new, self.__body)
+        except re.error:
+            replaced = old.replace('\\', '\\\\')
+            print(f'replace {old} --> {replaced}')
+            self.__body = re.sub(replaced, new, self.__body)
         self.__body_without_comment = self.remove_comment(self.__body)
 
     def remove_comment(self, lines: str) -> str:
@@ -45,8 +50,10 @@ class Environment(object):
 
     @classmethod
     def get_env(cls, body: str, envname: str) -> str:
-        pattern = f'\\\\begin\\{{{envname}\\}}(.+)\\\\end\\{{{envname}\\}}'
-        env = re.findall(pattern, body, re.DOTALL)
+        env = re.findall(
+            f'\\\\begin\\{{{envname}\\}}(.+)\\\\end\\{{{envname}\\}}',
+            body,
+            re.DOTALL)
 
         if len(env) == 0:
             raise
