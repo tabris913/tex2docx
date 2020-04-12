@@ -40,7 +40,7 @@ class Tex2Docx:
             doc.remove_maketitle()
         # print(doc.body_without_comment)
         doc.make_constructure()
-        print(doc.constructure)
+        print(doc.children)
 
     def __write(self):
         self.__doc.save(self.__target)

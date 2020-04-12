@@ -1,5 +1,3 @@
-from .document import Document
-from .environment import Environment
+from .environment import Environment, Document
 from .meta import Meta
-from .section import *
 from .command import *

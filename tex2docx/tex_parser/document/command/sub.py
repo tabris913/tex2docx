@@ -2,23 +2,7 @@
 
 from typing import List
 
-
-class Command(object):
-    def __init__(self, command: str):
-        self.__raw_command = command
-
-    @property
-    def raw_command(self):
-        return self.__raw_command
-
-    def __parameter(self):
-        ...
-
-    def __option(self):
-        ...
-
-    def __command_name(self):
-        ...
+from .command import Command
 
 
 class Title(Command):
@@ -91,7 +75,3 @@ class Label(Command):
 class Ref(Command):
     def __init__(self):
         super().__init__('\\ref')
-
-
-def command_converter(self, command_list: List[str]):
-    ...

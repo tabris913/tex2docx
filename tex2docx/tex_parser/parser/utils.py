@@ -2,6 +2,7 @@
 
 import functools
 import re
+from typing import List
 
 REG_SPACE = re.compile(r'\s')
 REG_NL = re.compile(r'\n')
