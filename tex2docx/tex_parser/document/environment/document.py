@@ -1,7 +1,8 @@
 # coding: utf-8
 
 from ....error import MultipleDocumentException, NoDocumentException
-from ..command import MakeTitle, Section, SubSection, SubSubSection, Paragraph, SubParagraph
+from ..command import MakeTitle
+from ..command.section import Section, SubSection, SubSubSection, Paragraph, SubParagraph
 from .environment import Environment
 from ..converter import convert_structure, convert_environment
 
@@ -9,6 +10,7 @@ from ..converter import convert_structure, convert_environment
 class Document(Environment):
     def __init__(self, body: str):
         super().__init__('document', body)
+        # self.make_constructure()
 
     def has_maketitle(self) -> bool:
         return MakeTitle.command in self.body
@@ -17,20 +19,15 @@ class Document(Environment):
         self.replace_body(MakeTitle.command, '\n')
 
     def make_constructure(self):
-        self.children = Section.sectionize(self.body_without_comment)
-        self.children = SubSection.subsectionize(
-            self.children[0]) + self.children[1:]
-        self.children = SubSubSection.subsubsectionize(
-            self.children[0]) + self.children[1:]
-        self.children = Paragraph.paragraphize(
-            self.children[0]) + self.children[1:]
-        self.children = SubParagraph.subparagraphize(
-            self.children[0]) + self.children[1:]
+        self.children.extend(Section.sectionize(self.body_without_comment))
+        self.children.expand(SubSection.subsectionize(self.children[0]), 0)
+        self.children.expand(
+            SubSubSection.subsubsectionize(self.children[0]), 0)
+        self.children.expand(Paragraph.paragraphize(self.children[0]), 0)
+        self.children.expand(SubParagraph.subparagraphize(self.children[0]), 0)
         # env系抜き出す
-        # not command, not env: search subsec, subsubsec, ...
-        self.children = convert_environment(
-            self.children[0]) + self.children[1:]
-        self.children = convert_structure(self.children)
+        self.children.expand(convert_environment(self.children[0]), 0)
+        convert_structure(self.children)
 
     @classmethod
     def generate_document(cls, body: str):

@@ -6,3 +6,5 @@ import enum
 class ElementType(enum.Enum):
     ENVIRONMENT = 'ENVIRONMENT'
     COMMAND = 'COMMAND'
+    TEXT = 'TEXT'
+    FORMULA = 'FORMULA'

@@ -5,6 +5,7 @@ from __future__ import annotations
 import re
 from typing import List, Union
 
+from ...converter import convert_environment, convert_structure
 from .base import SectionBase
 
 REG_META = re.compile(r'^(.+?)(?:(?=\\subparagraph)|\Z)', re.DOTALL)
@@ -17,6 +18,7 @@ REG_GET_COMMAND = re.compile(r'\\subparagraph\*?\{.+?\}', re.DOTALL)
 class SubParagraph(SectionBase):
     def __init__(self, command: str, body: str):
         super().__init__(command, body)
+        self.make_constructure()
 
     @classmethod
     def subparagraphize(cls, text: str) -> List[Union[str, SubParagraph]]:
@@ -37,3 +39,7 @@ class SubParagraph(SectionBase):
     @classmethod
     def get_subparagraph(cls, text: str) -> List[str]:
         return REG_GET_BODY.findall(text)
+
+    def make_constructure(self):
+        self.children.extend(convert_environment(self.body))
+        convert_structure(self.children)

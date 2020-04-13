@@ -8,6 +8,8 @@ from ....error import InvalidEnvironment
 from ..element import TexElement
 from ...parser.utils import is_comment, remove_comment, trim_empty
 from ...const import ElementType
+from ..command import Command
+from ..command.section import SectionBase
 
 
 class Environment(TexElement):
@@ -16,6 +18,13 @@ class Environment(TexElement):
         self.__envname = envname
         self.__body = body
         self.__body_without_comment = None
+        self.set_children()
+
+    def __str__(self):
+        to_print = [f'[E] {self.name}']
+        for child in self.children:
+            to_print.append(f'{str(child)}')
+        return '\n'.join(to_print)
 
     @property
     def name(self):
@@ -55,7 +64,7 @@ class Environment(TexElement):
     @classmethod
     def get_env(cls, body: str, envname: str) -> str:
         env = re.findall(
-            f'\\\\begin\\{{{envname}\\}}(.+?)\\\\end\\{{{envname}\\}}',
+            f'\\\\begin\\{{{envname}\\}}(?:\\[.+?\\])?(.+?)\\\\end\\{{{envname}\\}}',
             body,
             re.DOTALL)
 

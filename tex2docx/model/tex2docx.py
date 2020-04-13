@@ -4,13 +4,14 @@ import os
 
 from .document import Document
 from ..tex_parser import TexParser
-from ..tex_parser.document import Document as ParserDoc, Meta
+from ..tex_parser.document import Document as TexDoc, Meta
 
 
 class Tex2Docx:
     def __init__(self, source: str, target: str):
         self.__source = source
         self.__target = target
+        self.__used_imgs = []
 
         self.__doc = Document()
 
@@ -34,13 +35,15 @@ class Tex2Docx:
         self.__doc.add_author(meta.author)
         self.__doc.add_date(meta.date)
 
-    def __parse_doc(self, doc: ParserDoc):
+    def __parse_doc(self, doc: TexDoc):
         if doc.has_maketitle():
             self.__parse_meta(self.__parser.meta)
             doc.remove_maketitle()
         # print(doc.body_without_comment)
         doc.make_constructure()
-        print(doc.children)
+        self.__used_imgs = self.__doc.parse_document(doc)
 
     def __write(self):
         self.__doc.save(self.__target)
+        for img in self.__used_imgs:
+            os.remove(img)
