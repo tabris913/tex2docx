@@ -1,6 +1,7 @@
 # coding: utf-8
 
 import os
+from pathlib import Path
 
 from .document import Document
 from ..tex_parser import TexParser
@@ -13,7 +14,7 @@ class Tex2Docx:
         self.__target = target
         self.__used_imgs = []
 
-        self.__doc = Document()
+        self.__doc = Document(Path(source))
 
     def debug(self):
         print(f'source: {self.__source}')

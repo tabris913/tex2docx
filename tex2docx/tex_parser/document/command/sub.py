@@ -122,3 +122,10 @@ class BottomRule(Command):
 
     def __init__(self):
         super().__init__(self.command)
+
+
+class IncludeGraphics(Command):
+    command = '\\includegraphics'
+
+    def __init__(self, command: str):
+        super().__init__(command)

@@ -1,21 +1,28 @@
 # coding: utf-8
 
 import collections
+import os
+from pathlib import Path
+import uuid
+from typing import List, Union
+
 import docx
 import matplotlib.mathtext as mathtext
-from typing import List, Union
-import uuid
+import pdf2image
 
 from ..tex_parser.document import Document as TexDoc
 from ..tex_parser.document import *
-from ..tex_parser.document.element import TexElement
 from ..tex_parser.document.command.section import *
+from ..tex_parser.document.element import TexElement
 from ..tex_parser.document.utils import Children
 from .ref import Reference
 
+WIDTH = docx.shared.Cm(15)
+
 
 class Document(docx.document.Document):
-    def __init__(self):
+    def __init__(self, source: Path):
+        self.__source_dir = source.parent
         self.__base = docx.Document()
         super().__init__(self.__base.element, self.__base.part)
         self.__used_imgs = []
@@ -120,7 +127,47 @@ class Document(docx.document.Document):
             self.add_paragraph()
 
     def __add_figure(self, figure: Figure):
-        print(figure)
+        if figure.has_graphics:
+            self.__figure_count += 1
+
+            # add figure
+            for child in figure.children:
+                if isinstance(child, IncludeGraphics):
+                    path = self.__source_dir / Path(child.parameter)
+                    if path.exists():
+                        if path.suffix == '.pdf':
+                            try:
+                                img = pdf2image.convert_from_path(str(path))[0]
+                                newpath = (
+                                    path.parent / path.stem).with_suffix('.png')
+                                img.save(newpath, 'png')
+                                fig = self.add_picture(str(newpath))
+                            except BaseException as e:
+                                raise Exception(
+                                    f'occured while converting pdf to png: {e}')
+                        else:
+                            fig = self.add_picture(str(path))
+                        if fig.width > WIDTH:
+                            ratio = fig.width / WIDTH
+                            fig.width = WIDTH
+                            fig.height = int(fig.height / ratio)
+                    else:
+                        raise FileNotFoundError(path)
+
+            p = self.add_paragraph()
+            p.alignment = docx.enum.text.WD_PARAGRAPH_ALIGNMENT.CENTER
+
+            # add caption if exists
+            try:
+                caption = figure.caption
+                p.add_run(
+                    f'Figure {self.__figure_count}: {caption.parameter}').bold = True
+                label = figure.label
+                self.__tags[label.parameter] = f'Figure {self.__figure_count}'
+            except BaseException:
+                print('failed')
+
+            self.add_paragraph()
 
     def __add_formula(self, formula: Formula):
         figname = f'fig/{uuid.uuid4()}.png'

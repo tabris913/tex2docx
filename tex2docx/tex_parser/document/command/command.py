@@ -7,8 +7,8 @@ from ...const import ElementType
 
 REG_PARAM = re.compile(r'\{(.+)\}')
 REG_OPTION = re.compile(r'\[(.+)\]')
-REG_NAME = re.compile(r'\\(.+?)\*?(?:(?=\[|\{|\Z))')
-REG_COMMAND = re.compile(r'(\\.+?)\*?(?:(?=\[|\{|\Z))')
+REG_NAME = re.compile(r'^\\(.+?)\*?(?:(?=\[|\{|\Z))')
+REG_COMMAND = re.compile(r'^(\\.+?)\*?(?:(?=\[|\{|\Z))')
 
 
 class Command(TexElement):

@@ -60,6 +60,8 @@ def convert_structure(structure: List[Union[str, TexElement]]):
                     structure[index] = Caption(elm)
                 elif cmd == CLine.command:
                     structure[index] = CLine(elm)
+                elif cmd == IncludeGraphics.command:
+                    structure[index] = IncludeGraphics(elm)
                 else:
                     structure[index] = Command(elm)
                     unknown_command.append(elm)

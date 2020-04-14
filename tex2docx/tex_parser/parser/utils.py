@@ -57,5 +57,5 @@ def divide_command(line: str) -> List[str]:
     line = REG_TRIM_NL.sub(r'\n', line.replace('\\%', '%'))
     line = REG_SP_AFTER_CMD.sub(r'\g<command>\n', line)
     # convert \\ to \n\\
-    line = re.sub(r'\\', r'\n\\', line)
+    line = re.sub(r'(?<!\=)\\', r'\n\\', line)
     return [line for line in map(trim, line.split('\n')) if line != '']
