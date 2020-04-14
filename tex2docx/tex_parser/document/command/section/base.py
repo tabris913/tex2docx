@@ -23,3 +23,6 @@ class SectionBase(Command):
     @property
     def name(self) -> str:
         return self.parameter
+
+    def _set_label(self):
+        super()._set_label(self.parameter)

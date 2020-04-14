@@ -35,6 +35,14 @@ def convert_structure(structure: List[Union[str, TexElement]]):
                 structure[index] = TableOfContents()
             elif elm == Centering.command:
                 structure[index] = Centering()
+            elif elm == HLine.command:
+                structure[index] = HLine()
+            elif elm == TopRule.command:
+                structure[index] = TopRule()
+            elif elm == MidRule.command:
+                structure[index] = MidRule()
+            elif elm == BottomRule.command:
+                structure[index] = BottomRule()
             else:
                 cmd = Command(elm).cmd
                 if cmd is None:
@@ -50,6 +58,8 @@ def convert_structure(structure: List[Union[str, TexElement]]):
                     structure[index] = Label(elm)
                 elif cmd == Caption.command:
                     structure[index] = Caption(elm)
+                elif cmd == CLine.command:
+                    structure[index] = CLine(elm)
                 else:
                     structure[index] = Command(elm)
                     unknown_command.append(elm)

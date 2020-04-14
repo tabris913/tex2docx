@@ -87,3 +87,38 @@ class Ref(Command):
 
     def __init__(self, command: str):
         super().__init__(command)
+
+
+class HLine(Command):
+    command = '\\hline'
+
+    def __init__(self):
+        super().__init__(self.command)
+
+
+class CLine(Command):
+    command = '\\cline'
+
+    def __init__(self, command: str):
+        super().__init__(command)
+
+
+class TopRule(Command):
+    command = '\\toprule'
+
+    def __init__(self):
+        super().__init__(self.command)
+
+
+class MidRule(Command):
+    command = '\\midrule'
+
+    def __init__(self):
+        super().__init__(self.command)
+
+
+class BottomRule(Command):
+    command = '\\bottomrule'
+
+    def __init__(self):
+        super().__init__(self.command)

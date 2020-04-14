@@ -10,6 +10,7 @@ from .paragraph import Paragraph
 from .subparagraph import SubParagraph
 from .subsection import SubSection
 from .subsubsection import SubSubSection
+from ..command import Command
 from ...converter import convert_environment, convert_structure
 
 REG_META = re.compile(r'^(.+?)(?:(?=\\section)|\Z)', re.DOTALL)
@@ -53,3 +54,4 @@ class Section(SectionBase):
         # env系抜き出す
         self.children.expand(convert_environment(self.children[0]), 0)
         convert_structure(self.children)
+        self._set_label()

@@ -5,7 +5,7 @@ import re
 from ..element import TexElement
 from ...const import ElementType
 
-REG_PARAM = re.compile(r'\{(\w+)\}')
+REG_PARAM = re.compile(r'\{(.+)\}')
 REG_OPTION = re.compile(r'\[(.+)\]')
 REG_NAME = re.compile(r'\\(.+?)\*?(?:(?=\[|\{|\Z))')
 REG_COMMAND = re.compile(r'(\\.+?)\*?(?:(?=\[|\{|\Z))')
@@ -22,6 +22,7 @@ class Command(TexElement):
         self.__set_parameter()
         self.__set_option()
         self.__set_command()
+        self.__label = None
 
     def __str__(self):
         return f'[C] {self.command_name}'
@@ -45,6 +46,10 @@ class Command(TexElement):
     @property
     def cmd(self):
         return self.__command
+
+    @property
+    def label(self):
+        return self.__label
 
     def __set_parameter(self):
         param = REG_PARAM.findall(self.__raw_command)
@@ -81,3 +86,6 @@ class Command(TexElement):
             self.__command = command[0]
         else:
             raise
+
+    def _set_label(self, label: str):
+        self.__label = label

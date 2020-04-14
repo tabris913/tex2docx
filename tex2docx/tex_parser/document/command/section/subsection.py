@@ -50,3 +50,4 @@ class SubSection(SectionBase):
         # env系抜き出す
         self.children.expand(convert_environment(self.children[0]), 0)
         convert_structure(self.children)
+        self._set_label()

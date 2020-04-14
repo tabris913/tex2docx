@@ -41,9 +41,10 @@ class Tex2Docx:
             doc.remove_maketitle()
         # print(doc.body_without_comment)
         doc.make_constructure()
-        self.__used_imgs = self.__doc.parse_document(doc)
+        self.__doc.parse_document(doc)
 
     def __write(self):
+        self.__doc.assign_refs()
         self.__doc.save(self.__target)
-        for img in self.__used_imgs:
+        for img in self.__doc.used_imgs:
             os.remove(img)

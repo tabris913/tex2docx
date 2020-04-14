@@ -43,3 +43,4 @@ class SubParagraph(SectionBase):
     def make_constructure(self):
         self.children.extend(convert_environment(self.body))
         convert_structure(self.children)
+        self._set_label()
